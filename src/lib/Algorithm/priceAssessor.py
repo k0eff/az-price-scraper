@@ -8,6 +8,7 @@ from pydantic import BaseModel
 from src.models.node import Node
 from src.models.nodeSpecification import NodeSpecification
 
+
 log = logging.getLogger("MAIN")
 logging.basicConfig()
 log.setLevel(logging.INFO)
@@ -20,18 +21,18 @@ log.setLevel(logging.INFO)
 
 class Sanitiser:
 
-    # Results now usable within the dataset object, this is necessary as we need to convert the array of combined API calls back to one JSON object
 
+
+    # Results now usable within the dataset object, this is necessary as we need to convert the array of combined API calls back to one JSON object
     def fetchDataset(self):
         with open("dataset.json", "r") as i:
-            JSON_data = i.read()
-            dataset = json.loads(JSON_data)
-        return dataset
+            JSON_data = json.load(i)
+        return JSON_data
 
     def sanitiseData(self, nspec):
         dataset = self.fetchDataset()
         dataSetCopy = deepcopy(dataset)
-
+        print(type(dataSetCopy))
         for k,v in dataSetCopy['offers'].items():
             # Remove non-relevant OS, remove non spot
             if (nspec.OS not in k):
@@ -53,6 +54,9 @@ class Sanitiser:
             if(v['series'] in nspec.excludedSeries):
                 del dataset['offers'][k]
                 continue
+
+        with open('datasetSanit.json', 'w') as f:
+            json.dump(dataset, f)
 
         return dataset
 
