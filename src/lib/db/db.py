@@ -1,19 +1,22 @@
-import motor.motor_asyncio
-
+import pymongo
 
 class DB:
 
     config: object
     dbClient: object
     pdb: object
+    pricesCol: object
+    currentCol: object
 
     __conection = None
 
-    def __init__(self, config):
+    def __init__(self, mongoConfig):
         global connection
-        self.config = config
-        self.dbClient = motor.motor_asyncio.AsyncIOMotorClient(self.config['mongodbUrl'])
-        connection = self.dbClient.azPrices
+        self.config = mongoConfig
+        self.dbClient = pymongo.MongoClient(self.config['mongodbUrl'])
+        pdb = self.dbClient.azPrices
+        pricesCol = self.dbClient.prices
+        currentCol = self.dbClient.current
 
 
 

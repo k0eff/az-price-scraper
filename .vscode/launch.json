@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "name": "Launch main program",
+            "type": "python",
+            "request": "launch",
+            "module": "uvicorn",
+            "args": [
+                "main:app",
+                "--reload"
+            ]
+        }
+    ]
+}

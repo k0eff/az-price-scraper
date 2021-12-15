@@ -2,13 +2,13 @@ import json
 from src.lib.apiResponse import apiResponse
 from src.lib.db import db
 from src.api import api
-import uvicorn
 from src.lib.globals.config import Config
+from src.lib.handlers import dataHandler as dh
 
-api(db, config)
 
-# bla = db.dbClient.bla.blaCol.find({"hello": "world"})
+conf = Config()
+database = db.DB(mongoConfig=conf.configData)
+dataHandler = dh.DataHandler(dbCon=database.dbClient)
+app = api.__init__(dh=dataHandler)
 
-uvicorn.run("app.api:app", host="0.0.0.0", port=8080, reload=True)
 
- 

@@ -1,23 +1,22 @@
-import FastAPI
-from lib.apiResponse import apiResponse
+from src.lib import apiResponse
 from src.lib.handlers import dataHandler
+from fastapi.responses import JSONResponse
+from fastapi.encoders import jsonable_encoder
 
-app = FastAPI
-
-dbClient = None
-config = None
-dbInstance = None
-
-def setup(dbClient, config):
-    dbClient = dbClient
-    config = config
-
-    return dbClient, config
+from fastapi import FastAPI
 
 
+app = None
+dataHandler = None
 
-@app.get("/", response_description="test route", response_model=apiResponse)
-async def getData():
-    global dbClient
-    return await dataHandler.getTestDbData(dbClient)
+def __init__(dh):
+    global dataHandler, app
+    app = FastAPI()
+    dataHandler = dh
+
+    @app.get(path="/")
+    def getData():
+        data = dataHandler.getTestDbData()
+        return {"abv":"dge"}
+    return app
 
