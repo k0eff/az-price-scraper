@@ -5,8 +5,8 @@ import logging
 from pydantic import BaseModel
 
 # Init Logger
-from src.Models.node import Node
-from src.Models.nodeSpecification import NodeSpecification
+from src.models.node import Node
+from src.models.nodeSpecification import NodeSpecification
 
 log = logging.getLogger("MAIN")
 logging.basicConfig()
@@ -20,9 +20,8 @@ log.setLevel(logging.INFO)
 
 class Sanitiser:
 
-
-
     # Results now usable within the dataset object, this is necessary as we need to convert the array of combined API calls back to one JSON object
+
     def fetchDataset(self):
         with open("dataset.json", "r") as i:
             JSON_data = i.read()
@@ -54,9 +53,6 @@ class Sanitiser:
             if(v['series'] in nspec.excludedSeries):
                 del dataset['offers'][k]
                 continue
-
-        with open('datasetSanit.json', 'w') as f:
-            json.dump(dataset, f)
 
         return dataset
 
