@@ -3,15 +3,7 @@ from src.lib.apiResponse import apiResponse
 from src.lib.db import db
 from src.api import api
 import uvicorn
-
-
-
-configFile = open('./config.json')
-configData = json.load(configFile)
-
-
-from src.lib.db import db
-db = db.DB(configData)
+from src.lib.globals.config import Config
 
 api(db, config)
 
