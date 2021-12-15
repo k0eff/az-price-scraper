@@ -1,0 +1,4 @@
+FastAPI==0.70.1
+motor==2.5.1
+requests==2.22.0
+uvicorn==0.16.0
