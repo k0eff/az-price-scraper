@@ -7,12 +7,13 @@ class DB:
     dbClient: object
     pdb: object
 
-
+    __conection = None
 
     def __init__(self, config):
+        global connection
         self.config = config
         self.dbClient = motor.motor_asyncio.AsyncIOMotorClient(self.config['mongodbUrl'])
-        pdb = self.dbClient.azPrices
+        connection = self.dbClient.azPrices
 
 
 
