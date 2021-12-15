@@ -14,9 +14,15 @@ def __init__(dh):
     app = FastAPI()
     dataHandler = dh
 
-    @app.get(path="/")
-    def getData():
-        data = dataHandler.getTestDbData()
-        return {"abv":"dge"}
-    return app
 
+    @app.post(path="/prices")
+    def putData():
+        data=dataHandler.downloadPrices()
+        return {"success": True}
+
+
+    @app.get(path="/prices")
+    def getData():
+        data = dataHandler.getAllPrices()
+        return data
+    return app

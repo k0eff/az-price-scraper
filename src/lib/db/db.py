@@ -4,6 +4,7 @@ class DB:
 
     config: object
     dbClient: object
+    dbName: str
     pdb: object
     pricesCol: object
     currentCol: object
@@ -11,12 +12,12 @@ class DB:
     __conection = None
 
     def __init__(self, mongoConfig):
-        global connection
         self.config = mongoConfig
         self.dbClient = pymongo.MongoClient(self.config['mongodbUrl'])
-        pdb = self.dbClient.azPrices
-        pricesCol = self.dbClient.prices
-        currentCol = self.dbClient.current
+        self.dbName = self.config['mongoDbName']
+        self.pdb = self.dbClient[self.dbName]
+        self.pricesCol = self.pdb.prices
+        self.currentCol = self.pdb.current
 
 
 

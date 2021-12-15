@@ -6,9 +6,9 @@ from src.lib.globals.config import Config
 from src.lib.handlers import dataHandler as dh
 
 
-conf = Config()
-database = db.DB(mongoConfig=conf.configData)
-dataHandler = dh.DataHandler(dbCon=database.dbClient)
+conf = Config().configData
+database = db.DB(mongoConfig=conf)
+dataHandler = dh.DataHandler(pricesCol=database.pricesCol, cfg=conf)
 app = api.__init__(dh=dataHandler)
 
 
