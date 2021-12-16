@@ -2,5 +2,5 @@
     "mongodbUrl": "mongodb://localhost:27017/admin?authSource=admin",
     "mongoDbName": "azPrices",
 
-    "azPriceUrl": "https://azure.microsoft.com/api/v2/pricing/virtual-machines-base/calculator/?culture=en-us&discount=mosp"
+    "azPriceUrl": "https://azure.microsoft.com/api/v3/pricing/virtual-machines/spot-advisor/?culture=en-us"
 }

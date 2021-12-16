@@ -1,6 +1,6 @@
 from typing import Dict, List
 
-from src.util.dataTypes.dataTypes import parseInts, parseLists, replaceBool
+from src.util.dataTypes.dataTypes import defaultValue, parseInts, parseLists, replaceBool, truthy
 
 class NodeSpecification():
     mincpu: int = None
@@ -10,6 +10,7 @@ class NodeSpecification():
     os: str
     spot: str
     excluded: List
+    region: str
 
     def __init__(self, params) -> None:
         for k, v in params.items():
@@ -18,7 +19,8 @@ class NodeSpecification():
             elif k == "minram": v = parseInts(v, 1)
             elif k == "maxram": v = parseInts(v, 32)
             elif k == "excluded": v = parseLists(v)
-            elif k == "spot": v = replaceBool(v, "lowpriority", "")
+            elif k == "spot": v = truthy(v)
+            elif k == "region": v = defaultValue(v, "europe-north")
             setattr(self, k, v)
         return
 
@@ -30,7 +32,8 @@ class NodeSpecification():
             "maxram": self.maxram,
             "os": self.os,
             "spot": self.spot,
-            "excluded": self.excluded
+            "excluded": self.excluded,
+            "region": self.region
         }
 
 

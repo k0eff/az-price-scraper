@@ -4,6 +4,8 @@ from copy import deepcopy
 import logging
 from pydantic import BaseModel
 
+from src.util.dataTypes.dataTypes import falsey, truthy
+
 
 
 log = logging.getLogger("MAIN")
@@ -49,7 +51,9 @@ class Sanitiser:
 
         for each in dataset:
             if (bool(nspec.os) and nspec.os not in each['offerName']) \
-            or (bool(nspec.spot) and nspec.spot not in each['offerName']) \
+            or ((truthy(nspec.spot) and "perhourspot" not in each['prices'])
+                or (falsey(nspec.spot) and "perhour" not in each['prices'])
+            ) \
             or ("cores" not in each or (each['cores'] < nspec.mincpu or each['cores']>nspec.maxcpu)) \
             or ("ram" not in each or (each['ram']<nspec.minram or each['ram']>nspec.maxram)) \
             or ("series" not in each or (each['series'] in nspec.excluded)):
@@ -63,23 +67,49 @@ class Sanitiser:
     def algorithm(self, dataset, nspec):
         bestPrice = 99999999999
         bestOffering = {}
-        for each in dataset:
-            mutliplier = nspec.maxcpu / each['cores']
-            if ('prices' not in each or 'europe-north' not in each['prices']): continue
-            price = float(each['prices']['europe-north']['value']) * mutliplier
+        for cOffer in dataset:
+            multiplier = nspec.maxcpu / cOffer['cores']
+            if (self.missingPrices(cOffer) or \
+                self.missingSpotPrices(cOffer, nspec) or \
+                self.missingRegularPrices(cOffer, nspec) or \
+                self.missingSpotPricesForMyRegion(cOffer, nspec) or \
+                self.missingRegularPricesForMyRegion(cOffer, nspec)
+                ): continue
+            price = self.getPriceForMyRegion(cOffer, nspec, multiplier)
 
             if(price < bestPrice):
                 bestPrice = price
                 bestOffering = {
                     **bestOffering,
-                    "cores": each['cores'],
-                    "ram": each['ram'],
-                    "diskSize": each['diskSize'],
-                    "series": each['series'],
-                    "isVcpu": each['isVcpu'],
-                    "offerName": each['offerName'],
-                    "price": each['prices']['europe-north']['value']
+                    "cores": cOffer['cores'],
+                    "ram": cOffer['ram'],
+                    "diskSize": cOffer['diskSize'],
+                    "series": cOffer['series'],
+                    "isVcpu": cOffer['isVcpu'],
+                    "offerName": cOffer['offerName'],
+                    "price": price,
+                    "region": nspec.region,
+                    "spot": nspec.spot
                 }
 
         return bestOffering
 
+    def getPriceForMyRegion(self, offer, nspec, multiplier):
+        spotOrNonSpotPrice = 'perhourspot' if truthy(nspec.spot) else "perhour"
+        return float(offer['prices'][spotOrNonSpotPrice][nspec.region]['value']) * multiplier
+
+    def missingPrices(self, offer):
+        return 'prices' not in offer
+
+    def missingSpotPrices(self, offer, nspec):
+        return (truthy(nspec.spot) and 'perhourspot' not in offer['prices'])
+
+    def missingRegularPrices(self, offer, nspec):
+        return (falsey(nspec.spot) and 'perhour' not in offer['prices'])
+
+    def missingSpotPricesForMyRegion(self, offer, nspec):
+        return (truthy(nspec.spot) and nspec.region not in offer['prices']['perhourspot'])
+
+    def missingRegularPricesForMyRegion(self, offer, nspec):
+        return (falsey(nspec.spot) and nspec.region not in offer['prices']['perhour'])
+    

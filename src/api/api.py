@@ -26,7 +26,7 @@ def init(dr):
 
 
     @app.get(path="/price")
-    def getBestOffering(mincpu="", maxcpu="", minram="", maxram="", os="", spot="", excluded=""):
+    def getBestOffering(mincpu="", maxcpu="", minram="", maxram="", os="", spot="", excluded="", region=""):
         params = { 
             "mincpu": mincpu, 
             "maxcpu": maxcpu, 
@@ -34,7 +34,8 @@ def init(dr):
             "maxram": maxram, 
             "os": os, 
             "spot": spot, 
-            "excluded": excluded
+            "excluded": excluded,
+            "region": region
         }
         data = dataRepo.getBestOffering(params)
         bestOfferRecord = {

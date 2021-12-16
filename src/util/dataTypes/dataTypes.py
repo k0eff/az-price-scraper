@@ -19,3 +19,7 @@ def truthy(val) -> bool:
 def falsey(val) -> bool:
     if not bool(val): return True
     else: return False
+
+def defaultValue(v, default) -> str:
+    if falsey(v): return default
+    else: return v
