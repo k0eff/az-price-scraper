@@ -49,8 +49,8 @@ class DataHandler:
 
         return True
 
-    def getBestOffering(self):
-        nodeSpec = NodeSpecification()
+    def getBestOffering(self, params):
+        nodeSpec = NodeSpecification(params)
         sanitiser = Sanitiser(pricesCol=prices)
         dataset = sanitiser.sanitiseData(nodeSpec)
         bestVmType = sanitiser.algorithm(dataset, nodeSpec)

@@ -28,8 +28,17 @@ def __init__(dh):
 
 
     @app.get(path="/price")
-    def getBestOffering():
-        data = dataHandler.getBestOffering()
+    def getBestOffering(mincpu="", maxcpu="", minram="", maxram="", os="", spot="", excluded=""):
+        params = { 
+            "mincpu": mincpu, 
+            "maxcpu": maxcpu, 
+            "minram": minram, 
+            "maxram": maxram, 
+            "os": os, 
+            "spot": spot, 
+            "excluded": excluded
+        }
+        data = dataHandler.getBestOffering(params)
         return data
 
 

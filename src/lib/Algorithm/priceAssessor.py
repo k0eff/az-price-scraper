@@ -45,15 +45,14 @@ class Sanitiser:
 
     def sanitiseData(self, nspec):
         dataset = self.fetchDataset()
-        dataSetCopy = deepcopy(dataset)
         filteredData = []
 
         for each in dataset:
-            if (nspec.OS not in each['offerName']) \
-            or (nspec.Spot not in each['offerName']) \
-            or (each['cores']<nspec.minCPU or each['cores']>nspec.maxCPU) \
-            or (each['ram']<nspec.minRAM or each['ram']>nspec.maxRAM) \
-            or (each['series'] in nspec.excludedSeries):
+            if (bool(nspec.os) and nspec.os not in each['offerName']) \
+            or (bool(nspec.spot) and nspec.spot not in each['offerName']) \
+            or ("cores" not in each or (each['cores'] < nspec.mincpu or each['cores']>nspec.maxcpu)) \
+            or ("ram" not in each or (each['ram']<nspec.minram or each['ram']>nspec.maxram)) \
+            or ("series" not in each or (each['series'] in nspec.excluded)):
                 continue
             else:
                 filteredData.append(each)
@@ -65,7 +64,8 @@ class Sanitiser:
         bestPrice = 99999999999
         bestOffering = {}
         for each in dataset:
-            mutliplier = nspec.maxCPU / each['cores']
+            mutliplier = nspec.maxcpu / each['cores']
+            if ('prices' not in each or 'europe-north' not in each['prices']): continue
             price = float(each['prices']['europe-north']['value']) * mutliplier
 
             if(price < bestPrice):
