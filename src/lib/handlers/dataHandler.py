@@ -2,6 +2,9 @@ from datetime import datetime
 from src.util.json.parse import jsonOut
 import json
 import requests
+from uuid import uuid4
+from src.lib.Algorithm.priceAssessor import Sanitiser 
+from src.models.nodeSpecification import NodeSpecification
 
 db = None
 
@@ -25,34 +28,30 @@ class DataHandler:
 
     def downloadPrices(self):
         baseurl = config['azPriceUrl']
-        keepPolling = True
-        dataSet = []
-        batch = 0
 
-        # Work around for MS only returning 100 results at a time
-        while(keepPolling == True):
-            list = []
-            enrichedData = {
-                "bedeExtraData": {
-                    "currentDate": datetime.now().isoformat()
-                }
+        enrichedData = {
+            "bedeExtraData": {
+                "extractionDate": datetime.now().isoformat(),
+                "batch": str(uuid4())
             }
-            url = baseurl + str(batch)
-            result = requests.get(url).json()
+        }
 
-            if (len(result['Items']) > 0):
-                for each in result['Items']:
-                    each = {**each, **enrichedData }
-                    list.append(each)
-                prices.insert_many(list)
+        list = []
 
-            dataSet.append(result)
+        url = baseurl
+        result = requests.get(url).json()
+        if bool(result) and len(result['offers']) > 0:
+            items = result['offers'].items()
+            for k, v in items:
+                res = {**v, **enrichedData, **{"offerName": k} }
+                list.append(res)
+            prices.insert_many(list)
 
-
-            # Loop until there is no longer an extra 100 results remaining
-            if(result['Count'] != 100):
-                keepPolling = False
-
-            # Increment in batches of 100
-            batch += 100
         return True
+
+    def getBestOffering(self):
+        nodeSpec = NodeSpecification()
+        sanitiser = Sanitiser(pricesCol=prices)
+        dataset = sanitiser.sanitiseData(nodeSpec)
+        bestVmType = sanitiser.algorithm(dataset, nodeSpec)
+        return bestVmType

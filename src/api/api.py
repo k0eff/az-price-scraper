@@ -25,4 +25,12 @@ def __init__(dh):
     def getData():
         data = dataHandler.getAllPrices()
         return data
+
+
+    @app.get(path="/price")
+    def getBestOffering():
+        data = dataHandler.getBestOffering()
+        return data
+
+
     return app

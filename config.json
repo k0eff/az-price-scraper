@@ -2,5 +2,5 @@
     "mongodbUrl": "mongodb://localhost:27017/admin?authSource=admin",
     "mongoDbName": "azPrices",
 
-    "azPriceUrl": "https://prices.azure.com/api/retail/prices?$filter=endswith(meterName, 'Spot') and armRegionName eq 'northeurope'&$skip="
+    "azPriceUrl": "https://azure.microsoft.com/api/v2/pricing/virtual-machines-base/calculator/?culture=en-us&discount=mosp"
 }
