@@ -3,12 +3,12 @@ from src.lib.apiResponse import apiResponse
 from src.lib.db import db
 from src.api import api
 from src.lib.globals.config import Config
-from src.lib.handlers import dataHandler as dh
+from src.lib.repositories.dataRepo import DataRepo
 
 
 conf = Config().configData
 database = db.DB(mongoConfig=conf)
-dataHandler = dh.DataHandler(pricesCol=database.pricesCol, cfg=conf)
-app = api.init(dh=dataHandler)
+dataRepo = DataRepo(pricesCol=database.pricesCol, cfg=conf)
+app = api.init(dr=dataRepo)
 
 

@@ -1,29 +1,26 @@
-from src.lib import apiResponse
-from src.lib.handlers import dataHandler
-from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 
 from fastapi import FastAPI
 
 
 app = None
-dataHandler = None
+dataRepo = None
 
-def init(dh):
-    global dataHandler, app
+def init(dr):
+    global dataRepo, app
     app = FastAPI()
-    dataHandler = dh
+    dataRepo = dr
 
 
     @app.post(path="/prices")
     def putData():
-        data=dataHandler.downloadPrices()
+        data=dataRepo.downloadPrices()
         return {"success": True}
 
 
     @app.get(path="/prices")
     def getData():
-        data = dataHandler.getAllPrices()
+        data = dataRepo.getAllPrices()
         return data
 
 
@@ -38,7 +35,7 @@ def init(dh):
             "spot": spot, 
             "excluded": excluded
         }
-        data = dataHandler.getBestOffering(params)
+        data = dataRepo.getBestOffering(params)
         return data
 
 

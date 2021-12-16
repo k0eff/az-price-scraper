@@ -8,7 +8,7 @@ from src.models.nodeSpecification import NodeSpecification
 
 db = None
 
-class DataHandler:
+class DataRepo:
 
     prices = None
     config = None
