@@ -9,7 +9,7 @@ from fastapi import FastAPI
 app = None
 dataHandler = None
 
-def __init__(dh):
+def init(dh):
     global dataHandler, app
     app = FastAPI()
     dataHandler = dh

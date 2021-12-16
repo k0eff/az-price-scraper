@@ -9,6 +9,6 @@ from src.lib.handlers import dataHandler as dh
 conf = Config().configData
 database = db.DB(mongoConfig=conf)
 dataHandler = dh.DataHandler(pricesCol=database.pricesCol, cfg=conf)
-app = api.__init__(dh=dataHandler)
+app = api.init(dh=dataHandler)
 
 
