@@ -8,7 +8,8 @@ class NodeSpecification():
     minram: int
     maxram: int
     os: str
-    spot: str
+    spot: bool
+    lowprio: bool
     excluded: List
     region: str
 
@@ -20,6 +21,7 @@ class NodeSpecification():
             elif k == "maxram": v = parseInts(v, 32)
             elif k == "excluded": v = parseLists(v)
             elif k == "spot": v = truthy(v)
+            elif k == "lowprio": v = truthy(v)
             elif k == "region": v = defaultValue(v, "europe-north")
             setattr(self, k, v)
         return

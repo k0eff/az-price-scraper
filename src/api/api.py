@@ -26,27 +26,31 @@ def init(dr):
 
 
     @app.get(path="/price")
-    def getBestOffering(mincpu="", maxcpu="", minram="", maxram="", os="", spot="", excluded="", region=""):
-        params = { 
-            "mincpu": mincpu, 
-            "maxcpu": maxcpu, 
-            "minram": minram, 
-            "maxram": maxram, 
-            "os": os, 
-            "spot": spot, 
-            "excluded": excluded,
-            "region": region
-        }
-        data = dataRepo.getBestOffering(params)
-        bestOfferRecord = {
-            **data,
-            "bedeExtraData": {
-                "extractionDate": datetime.now().isoformat(),
-                "params": params
+    def getBestOffering(mincpu="", maxcpu="", minram="", 
+        maxram="", os="", spot="", excluded="", 
+        region="", lowprio=""):
+        
+            params = { 
+                "mincpu": mincpu, 
+                "maxcpu": maxcpu, 
+                "minram": minram, 
+                "maxram": maxram, 
+                "os": os, 
+                "spot": spot, 
+                "excluded": excluded,
+                "region": region,
+                "lowprio": lowprio
             }
-        }
-        dataRepo.saveBestOffering(bestOfferRecord)
-        return data
+            data = dataRepo.getBestOffering(params)
+            bestOfferRecord = {
+                **data,
+                "bedeExtraData": {
+                    "extractionDate": datetime.now().isoformat(),
+                    "params": params
+                }
+            }
+            dataRepo.saveBestOffering(bestOfferRecord)
+            return data
 
 
     return app

@@ -54,6 +54,7 @@ class Sanitiser:
             or ((truthy(nspec.spot) and "perhourspot" not in each['prices'])
                 or (falsey(nspec.spot) and "perhour" not in each['prices'])
             ) \
+            or (falsey(nspec.lowprio) and "lowpriority" in each['offerName']) \
             or ("cores" not in each or (each['cores'] < nspec.mincpu or each['cores']>nspec.maxcpu)) \
             or ("ram" not in each or (each['ram']<nspec.minram or each['ram']>nspec.maxram)) \
             or ("series" not in each or (each['series'] in nspec.excluded)):
@@ -89,7 +90,8 @@ class Sanitiser:
                     "offerName": cOffer['offerName'],
                     "price": price,
                     "region": nspec.region,
-                    "spot": nspec.spot
+                    "spot": nspec.spot,
+                    "lowprio": nspec.lowprio
                 }
 
         return bestOffering
