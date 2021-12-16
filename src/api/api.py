@@ -1,3 +1,4 @@
+from datetime import datetime
 from fastapi.encoders import jsonable_encoder
 
 from fastapi import FastAPI
@@ -36,6 +37,14 @@ def init(dr):
             "excluded": excluded
         }
         data = dataRepo.getBestOffering(params)
+        bestOfferRecord = {
+            **data,
+            "bedeExtraData": {
+                "extractionDate": datetime.now().isoformat(),
+                "params": params
+            }
+        }
+        dataRepo.saveBestOffering(bestOfferRecord)
         return data
 
 

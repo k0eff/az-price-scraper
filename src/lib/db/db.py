@@ -8,6 +8,7 @@ class DB:
     pdb: object
     pricesCol: object
     currentCol: object
+    bestOffers: object
 
     __conection = None
 
@@ -18,6 +19,7 @@ class DB:
         self.pdb = self.dbClient[self.dbName]
         self.pricesCol = self.pdb.prices
         self.currentCol = self.pdb.current
+        self.bestOffers = self.pdb.bestOffers
 
 
 

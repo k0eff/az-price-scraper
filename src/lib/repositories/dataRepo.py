@@ -11,11 +11,13 @@ db = None
 class DataRepo:
 
     prices = None
+    bestOffers = None
     config = None
 
-    def __init__(self, pricesCol, cfg) -> None:
-        global prices, config
+    def __init__(self, pricesCol, bestOffersCol, cfg) -> None:
+        global prices, config, bestOffers
         prices = pricesCol
+        bestOffers = bestOffersCol
         config = cfg
 
 
@@ -55,3 +57,7 @@ class DataRepo:
         dataset = sanitiser.sanitiseData(nodeSpec)
         bestVmType = sanitiser.algorithm(dataset, nodeSpec)
         return bestVmType
+
+    def saveBestOffering(self, record):
+        bestOffers.insert_one(record)
+        return
