@@ -5,6 +5,7 @@ import logging
 from pydantic import BaseModel
 
 
+
 log = logging.getLogger("MAIN")
 logging.basicConfig()
 log.setLevel(logging.INFO)
@@ -20,6 +21,8 @@ class Sanitiser:
     def __init__(self, pricesCol) -> None:
         self.prices = pricesCol
 
+
+    # Results now usable within the dataset object, this is necessary as we need to convert the array of combined API calls back to one JSON object
     def fetchDataset(self):
         lastBatch = None
         records = []
